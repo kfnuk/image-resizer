@@ -85,6 +85,7 @@
     background: #6366f1;
   }
   #preview-canvas {
+    margin-bottom: 40px;
     margin-top: 25px;
     max-width: 100%;
     max-height: 500px;
@@ -110,7 +111,30 @@
 <h1>Landing Page Image Optimiser</h1>
 <div id="upload-area">Click or Drop Images Here</div>
 <input type="file" id="file-input" accept="image/*">
-<div class="controls">
+<div class="controls" style="padding: 24px; gap: 18px;">
+  <label id="auto-trim-label" style="display: flex; align-items: center; gap: 12px; cursor: pointer; transition: color 0.3s;">
+  <span id="auto-trim-text" style="font-size: 0.95rem; color: #ccc;">🚫 Remove white space (PNG transparency)</span>
+  <input type="checkbox" id="auto-trim" style="appearance: none; width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; outline: none; cursor: pointer; transition: background 0.3s;">
+</label>
+<style>
+  #auto-trim:checked {
+    background: #6366f1;
+  }
+  #auto-trim::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+  }
+  #auto-trim:checked::before {
+    transform: translateX(20px);
+  }
+</style>
   <label>Resize:</label>
   <select id="resize-option">
     <option value="original">Original Size</option>
@@ -134,10 +158,6 @@
     <option value="image/png">PNG</option>
   </select>
   <button onclick="processImage()">Optimise & Download</button>
-</div>
-<div id="auto-trim-container">
-  <input type="checkbox" id="auto-trim">
-  <label for="auto-trim">Remove white space (PNG transparency)</label>
 </div>
 <canvas id="preview-canvas"></canvas>
 <script>
@@ -253,6 +273,16 @@ function processImage() {
     link.click();
   }, format, quality);
 }
+document.getElementById('auto-trim').addEventListener('change', function () {
+  const labelText = document.getElementById('auto-trim-text');
+  if (this.checked) {
+    labelText.textContent = '✅ Remove white space (PNG transparency)';
+    labelText.style.color = '#22c55e';
+  } else {
+    labelText.textContent = '🚫 Remove white space (PNG transparency)';
+    labelText.style.color = '#ccc';
+  }
+});
 </script>
 </body>
 </html>
