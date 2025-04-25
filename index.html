@@ -81,6 +81,9 @@
     max-width: 90%;
     border-radius: 12px;
     background: #fff;
+    display: block;
+    max-height: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   }
 </style>
 </head>
@@ -113,6 +116,7 @@
   </select>
   <button onclick="processImage()">Optimise & Download</button>
 </div>
+<label><input type="checkbox" id="auto-trim"> Remove white space (PNG transparency)</label>
 <canvas id="preview-canvas"></canvas>
 <script>
 const uploadArea = document.getElementById('upload-area');
@@ -162,6 +166,7 @@ function previewImage() {
 }
 
 function processImage() {
+  const trimWhitespace = document.getElementById('auto-trim').checked;
   let width = img.width;
   let height = img.height;
   const option = resizeOption.value;
@@ -180,6 +185,38 @@ function processImage() {
   canvas.width = width;
   canvas.height = height;
   ctx.drawImage(img, 0, 0, width, height);
+
+  if (trimWhitespace && format === 'image/png') {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let top = null, bottom = null, left = null, right = null;
+
+    for (let y = 0; y < canvas.height; y++) {
+      for (let x = 0; x < canvas.width; x++) {
+        const idx = (y * canvas.width + x) * 4;
+        const alpha = pixels[idx + 3];
+        if (alpha !== 0) {
+          if (top === null) top = y;
+          bottom = y;
+          if (left === null || x < left) left = x;
+          if (right === null || x > right) right = x;
+        }
+      }
+    }
+
+    if (top !== null) {
+      const trimmedWidth = right - left + 1;
+      const trimmedHeight = bottom - top + 1;
+      const trimmedCanvas = document.createElement('canvas');
+      trimmedCanvas.width = trimmedWidth;
+      trimmedCanvas.height = trimmedHeight;
+      trimmedCanvas.getContext('2d').drawImage(canvas, left, top, trimmedWidth, trimmedHeight, 0, 0, trimmedWidth, trimmedHeight);
+      canvas.width = trimmedWidth;
+      canvas.height = trimmedHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(trimmedCanvas, 0, 0);
+    }
+  }
 
   const quality = parseInt(qualityInput.value) / 100;
   const format = formatSelect.value;
