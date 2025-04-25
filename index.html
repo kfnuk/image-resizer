@@ -105,59 +105,98 @@
     font-size: 0.9rem;
     color: #ccc;
   }
+#auto-trim:checked {
+  background: #22c55e;
+}
+#auto-trim::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+#auto-trim:checked::before {
+  transform: translateX(20px);
+}
 </style>
 </head>
 <body>
 <h1>Landing Page Image Optimiser</h1>
 <div id="upload-area">Click or Drop Images Here</div>
 <input type="file" id="file-input" accept="image/*">
-<div class="controls" style="padding: 24px; gap: 18px;">
-  <label id="auto-trim-label" style="display: flex; align-items: center; gap: 12px; cursor: pointer; transition: color 0.3s;">
+<div class="controls" style="padding: 24px 24px 32px 24px; gap: 24px;">
+  <label id="auto-trim-label" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #1f1f1f; border-radius: 10px; gap: 12px; cursor: pointer; transition: color 0.3s;">
   <span id="auto-trim-text" style="font-size: 0.95rem; color: #ccc;">🚫 Remove white space (PNG transparency)</span>
   <input type="checkbox" id="auto-trim" style="appearance: none; width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; outline: none; cursor: pointer; transition: background 0.3s;">
-</label>
-<style>
-  #auto-trim:checked {
-    background: #6366f1;
-  }
-  #auto-trim::before {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.3s;
-  }
-  #auto-trim:checked::before {
-    transform: translateX(20px);
-  }
-</style>
-  <label>Resize:</label>
-  <select id="resize-option">
-    <option value="original">Original Size</option>
-    <option value="1920x1080">Full Banner (1920x1080)</option>
-    <option value="1600x900">Hero Section (1600x900)</option>
-    <option value="750x1334">Mobile (750x1334)</option>
-    <option value="custom">Custom Size</option>
-  </select>
-  <div id="custom-size" style="display: none;">
-    <input type="number" id="custom-width" placeholder="Width (px)">
-    <input type="number" id="custom-height" placeholder="Height (px)">
+
+  </label>
+
+  <div style="background: #1f1f1f; padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="font-size: 1rem; font-weight: 500; margin-bottom: 10px;">Resize Options</div>
+    <label style="margin-bottom: 6px; display: inline-block;">Resize:</label>
+    <select id="resize-option">
+  <option value="custom" selected>Custom Size</option>
+  <option value="original">Original Size</option>
+  <option value="1920x1080">Full Banner (1920x1080)</option>
+  <option value="1600x900">Hero Section (1600x900)</option>
+  <option value="750x1334">Mobile (750x1334)</option>
+    </select>
+    <div id="custom-size" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <input type="number" id="custom-width" placeholder="Width (px)" style="flex: 1;">
+          <input type="number" id="custom-height" placeholder="Height (px)" style="flex: 1;">
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="lock-ratio" style="appearance: none; width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; outline: none; cursor: pointer;">
+            <label for="lock-ratio" style="font-size: 0.85rem; color: #ccc;">Lock Ratio</label>
+          </div>
+          <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <label>Quality (%):</label>
-  <input type="range" id="quality" min="10" max="100" value="80">
-  <label>Rename File (for SEO):</label>
-  <input type="text" id="new-filename" placeholder="e.g., best-product-image">
-  <label>Output Format:</label>
-  <select id="format">
-    <option value="image/webp">WebP</option>
-    <option value="image/jpeg">JPEG</option>
-    <option value="image/png">PNG</option>
-  </select>
-  <button onclick="processImage()">Optimise & Download</button>
+
+  <div style="margin-top: 20px;"></div>
+<label for="quality">Quality: <span id="quality-value">80%</span></label>
+<input type="range" id="quality" min="10" max="100" value="80">
+
+<label>Rename File (for SEO):</label>
+<input type="text" id="new-filename" placeholder="e.g., best-product-image">
+
+<label>Output Format:</label>
+<select id="format">
+  <option value="image/webp">WebP</option>
+  <option value="image/jpeg">JPEG</option>
+  <option value="image/png">PNG</option>
+</select>
+
+<button onclick="processImage()">Optimise & Download</button>
+</div>
+<style>
+#lock-ratio:checked {
+  background: #6366f1;
+}
+#lock-ratio::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+#lock-ratio:checked::before {
+  transform: translateX(20px);
+}
+</style>
 </div>
 <canvas id="preview-canvas"></canvas>
 <script>
@@ -205,6 +244,11 @@ function previewImage() {
   canvas.width = img.width;
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
+  if (resizeOption.value === 'custom') {
+    customWidth.value = img.width;
+    customHeight.value = img.height;
+    updateAspectRatio();
+  }
 }
 
 function processImage() {
@@ -283,6 +327,36 @@ document.getElementById('auto-trim').addEventListener('change', function () {
     labelText.style.color = '#ccc';
   }
 });
+qualityInput.addEventListener('input', () => {
+  document.getElementById('quality-value').textContent = qualityInput.value + '%';
+});
+
+customWidth.addEventListener('input', () => {
+  if (document.getElementById('lock-ratio').checked && img.width && img.height) {
+    customHeight.value = Math.round((parseInt(customWidth.value) / img.width) * img.height);
+  }
+  updateAspectRatio();
+});
+
+customHeight.addEventListener('input', () => {
+  if (document.getElementById('lock-ratio').checked && img.width && img.height) {
+    customWidth.value = Math.round((parseInt(customHeight.value) / img.height) * img.width);
+  }
+  updateAspectRatio();
+});
+
+function updateAspectRatio() {
+  const w = parseInt(customWidth.value);
+  const h = parseInt(customHeight.value);
+  const ratioSpan = document.getElementById('aspect-ratio');
+  if (w && h) {
+    const gcd = (a, b) => b == 0 ? a : gcd(b, a % b);
+    const divisor = gcd(w, h);
+    ratioSpan.textContent = `Aspect Ratio: ${Math.round(w/divisor)}:${Math.round(h/divisor)}`;
+  } else {
+    ratioSpan.textContent = 'Aspect Ratio: N/A';
+  }
+}
 </script>
 </body>
 </html>
