@@ -10,232 +10,214 @@
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom right, #1f1f1f, #2a2a2a);
-    color: #f0f0f0;
+    background: linear-gradient(to bottom right, #1e1e2f, #282841);
+    color: #f8f8f8;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
     min-height: 100vh;
   }
   h1 {
-    margin: 20px 0 10px;
-    font-size: 2.2rem;
+    margin: 20px 0;
+    font-size: 2.5rem;
     color: #ffffff;
   }
   #upload-area {
-    background: #2e2e2e;
-    border: 2px dashed #666;
-    border-radius: 12px;
+    background: #31314a;
+    border: 2px dashed #555;
+    border-radius: 14px;
     width: 100%;
-    max-width: 600px;
-    height: 180px;
+    max-width: 620px;
+    height: 190px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     cursor: pointer;
     transition: background 0.3s, border-color 0.3s;
-    color: #aaa;
+    color: #bbb;
+    font-size: 1.2rem;
   }
   #upload-area:hover {
-    background: #393939;
-    border-color: #888;
+    background: #404065;
+    border-color: #777;
   }
   input[type="file"] {
     display: none;
   }
   .controls {
-    background: #252525;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    max-width: 600px;
+    background: #26263c;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    max-width: 620px;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
   }
   label {
-    font-size: 0.95rem;
-    color: #ccc;
+    font-size: 1rem;
+    color: #d1d5db;
+  }
+  input, select, button, input[type=range] {
+    width: 100%;
+    box-sizing: border-box;
   }
   input, select {
-    padding: 10px;
+    padding: 12px;
     border-radius: 10px;
     border: none;
-    width: 100%;
     font-size: 1rem;
-    background: #1c1c1c;
-    color: #f0f0f0;
+    background: #1f1f30;
+    color: #f8f8f8;
+  }
+  input::placeholder {
+    color: #888;
+    font-size: 0.95rem;
   }
   button {
-    background: #4f46e5;
+    background: #6366f1;
     color: white;
-    padding: 14px;
+    padding: 16px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.2s;
   }
   button:hover {
-    background: #6366f1;
+    background: #4f46e5;
+    transform: scale(1.03);
   }
   #preview-canvas {
     margin-bottom: 40px;
-    margin-top: 25px;
+    margin-top: 30px;
     max-width: 100%;
-    max-height: 500px;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-height: 520px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     display: block;
   }
-  #auto-trim-container {
-    margin: 0 auto 20px;
-    max-width: 600px;
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    color: #ccc;
+  input[type=range] {
+    appearance: none;
+    height: 6px;
+    background: #3c3c5a;
+    border-radius: 10px;
   }
-#auto-trim:checked {
-  background: #22c55e;
-}
-#auto-trim::before {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: white;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s;
-}
-#auto-trim:checked::before {
-  transform: translateX(20px);
-}
+  input[type=range]::-webkit-slider-thumb {
+    background: #6366f1;
+    border: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  #lock-ratio {
+    appearance: none;
+    width: 50px;
+    height: 26px;
+    background: #555;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #lock-ratio::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    left: 3px;
+    transition: 0.3s;
+  }
+  #lock-ratio:checked {
+    background: #6366f1;
+  }
+  #lock-ratio:checked::before {
+    transform: translateX(24px);
+  }
+  @media (max-width: 480px) {
+    .controls { padding: 16px; }
+  }
 </style>
 </head>
 <body>
 <h1>Landing Page Image Optimiser</h1>
 <div id="upload-area">Click or Drop Images Here</div>
 <input type="file" id="file-input" accept="image/*">
-<div class="controls" style="padding: 24px 24px 32px 24px; gap: 24px;">
-  <label id="auto-trim-label" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #1f1f1f; border-radius: 10px; gap: 12px; cursor: pointer; transition: color 0.3s;">
-  <span id="auto-trim-text" style="font-size: 0.95rem; color: #ccc;">🚫 Remove white space (PNG transparency)</span>
-  <input type="checkbox" id="auto-trim" style="appearance: none; width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; outline: none; cursor: pointer; transition: background 0.3s;">
-
-  </label>
-
-  <div style="background: #1f1f1f; padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 16px;">
-  <div style="font-size: 1rem; font-weight: 500; margin-bottom: 10px;">Resize Options</div>
-    <label style="margin-bottom: 6px; display: inline-block;">Resize:</label>
-    <select id="resize-option">
-  <option value="custom" selected>Custom Size</option>
-  <option value="original">Original Size</option>
-  <option value="1920x1080">Full Banner (1920x1080)</option>
-  <option value="1600x900">Hero Section (1600x900)</option>
-  <option value="750x1334">Mobile (750x1334)</option>
-    </select>
-    <div id="custom-size" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <input type="number" id="custom-width" placeholder="Width (px)" style="flex: 1;">
-          <input type="number" id="custom-height" placeholder="Height (px)" style="flex: 1;">
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="lock-ratio" style="appearance: none; width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; outline: none; cursor: pointer;">
-            <label for="lock-ratio" style="font-size: 0.85rem; color: #ccc;">Lock Ratio</label>
-          </div>
-          <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
-        </div>
-      </div>
+<div class="controls">
+  <label>Resize:</label>
+  <select id="resize-option">
+    <option value="custom" selected>Custom Size</option>
+    <option value="original">Original Size</option>
+    <option value="1920x1080">Full Banner (1920x1080)</option>
+    <option value="1600x900">Hero Section (1600x900)</option>
+    <option value="750x1334">Mobile (750x1334)</option>
+  </select>
+  <div id="custom-size-fields" style="display: flex; flex-direction: column; gap: 12px;">
+    <input type="number" id="custom-width" placeholder="Width (px)">
+    <input type="number" id="custom-height" placeholder="Height (px)">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <label for="lock-ratio" style="font-size: 0.9rem;">Lock Aspect Ratio</label>
+      <input type="checkbox" id="lock-ratio">
     </div>
+    <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
   </div>
-
-  <div style="margin-top: 20px;"></div>
-<label for="quality">Quality: <span id="quality-value">80%</span></label>
-<input type="range" id="quality" min="10" max="100" value="80">
-
-<label>Rename File (for SEO):</label>
-<input type="text" id="new-filename" placeholder="e.g., best-product-image">
-
-<label>Output Format:</label>
-<select id="format">
-  <option value="image/webp">WebP</option>
-  <option value="image/jpeg">JPEG</option>
-  <option value="image/png">PNG</option>
-</select>
-
-<button onclick="processImage()">Optimise & Download</button>
-</div>
-<style>
-#lock-ratio:checked {
-  background: #6366f1;
-}
-#lock-ratio::before {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: white;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s;
-}
-#lock-ratio:checked::before {
-  transform: translateX(20px);
-}
-</style>
+  <label for="quality">Quality: <span id="quality-value">80%</span></label>
+  <input type="range" id="quality" min="10" max="100" value="80">
+  <label>Rename File (for SEO):</label>
+  <input type="text" id="new-filename" placeholder="e.g., best-product-image">
+  <label>Output Format:</label>
+  <select id="format">
+    <option value="image/webp">WebP</option>
+    <option value="image/jpeg">JPEG</option>
+    <option value="image/png">PNG</option>
+  </select>
+  <button onclick="processImage()">Optimise & Download</button>
 </div>
 <canvas id="preview-canvas"></canvas>
 <script>
 const uploadArea = document.getElementById('upload-area');
 const fileInput = document.getElementById('file-input');
-const resizeOption = document.getElementById('resize-option');
-const customSizeDiv = document.getElementById('custom-size');
+const resizeSelect = document.getElementById('resize-option');
 const customWidth = document.getElementById('custom-width');
 const customHeight = document.getElementById('custom-height');
 const qualityInput = document.getElementById('quality');
+const qualityValue = document.getElementById('quality-value');
 const filenameInput = document.getElementById('new-filename');
 const formatSelect = document.getElementById('format');
 const canvas = document.getElementById('preview-canvas');
 const ctx = canvas.getContext('2d');
-const img = new Image();
+const lockRatio = document.getElementById('lock-ratio');
+const aspectRatioDisplay = document.getElementById('aspect-ratio');
+let img = new Image();
 
 uploadArea.addEventListener('click', () => fileInput.click());
-uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.background = '#333'; });
-uploadArea.addEventListener('dragleave', () => { uploadArea.style.background = '#2c2c2c'; });
-uploadArea.addEventListener('drop', (e) => {
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#333'; });
+uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#2e2e2e');
+uploadArea.addEventListener('drop', e => {
   e.preventDefault();
-  uploadArea.style.background = '#2c2c2c';
+  uploadArea.style.background = '#2e2e2e';
   handleFile(e.dataTransfer.files[0]);
 });
 fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
 
-resizeOption.addEventListener('change', () => {
-  customSizeDiv.style.display = resizeOption.value === 'custom' ? 'block' : 'none';
-});
-
 function handleFile(file) {
-  if (!file || !file.type.startsWith('image/')) {
-    alert('Please upload a valid image file.');
-    return;
-  }
+  if (!file || !file.type.startsWith('image/')) return alert('Please upload a valid image file.');
   const reader = new FileReader();
-  reader.onload = (e) => {
-    img.src = e.target.result;
+  reader.onload = e => {
+    img = new Image();
     img.onload = previewImage;
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -244,18 +226,55 @@ function previewImage() {
   canvas.width = img.width;
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
-  if (resizeOption.value === 'custom') {
+  if (resizeSelect.value === 'custom') {
     customWidth.value = img.width;
     customHeight.value = img.height;
     updateAspectRatio();
   }
 }
 
+resizeSelect.addEventListener('change', () => {
+  const customFields = document.getElementById('custom-size-fields');
+  customFields.style.display = resizeSelect.value === 'custom' ? 'flex' : 'none';
+});
+
+customWidth.addEventListener('input', () => {
+  if (lockRatio.checked && img.width && img.height) {
+    customHeight.value = Math.round((parseInt(customWidth.value) / img.width) * img.height);
+  }
+  updateAspectRatio();
+});
+
+customHeight.addEventListener('input', () => {
+  if (lockRatio.checked && img.width && img.height) {
+    customWidth.value = Math.round((parseInt(customHeight.value) / img.height) * img.width);
+  }
+  updateAspectRatio();
+});
+
+qualityInput.addEventListener('input', () => {
+  qualityValue.textContent = qualityInput.value + '%';
+});
+
+function updateAspectRatio() {
+  const w = parseInt(customWidth.value);
+  const h = parseInt(customHeight.value);
+  if (w && h) {
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+    const ratio = gcd(w, h);
+    aspectRatioDisplay.textContent = `Aspect Ratio: ${w/ratio}:${h/ratio}`;
+  } else {
+    aspectRatioDisplay.textContent = 'Aspect Ratio: N/A';
+  }
+}
+
 function processImage() {
-  const trimWhitespace = document.getElementById('auto-trim').checked;
+  if (!img.src) return alert('Please upload an image first.');
   let width = img.width;
   let height = img.height;
-  const option = resizeOption.value;
+  const option = resizeSelect.value;
+  const format = formatSelect.value;
+  const quality = parseInt(qualityInput.value) / 100;
 
   if (option !== 'original') {
     if (option === 'custom') {
@@ -270,92 +289,20 @@ function processImage() {
 
   canvas.width = width;
   canvas.height = height;
+  ctx.clearRect(0, 0, width, height);
   ctx.drawImage(img, 0, 0, width, height);
 
-  if (trimWhitespace && format === 'image/png') {
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let top = null, bottom = null, left = null, right = null;
-
-    for (let y = 0; y < canvas.height; y++) {
-      for (let x = 0; x < canvas.width; x++) {
-        const idx = (y * canvas.width + x) * 4;
-        const alpha = pixels[idx + 3];
-        if (alpha !== 0) {
-          if (top === null) top = y;
-          bottom = y;
-          if (left === null || x < left) left = x;
-          if (right === null || x > right) right = x;
-        }
-      }
-    }
-
-    if (top !== null) {
-      const trimmedWidth = right - left + 1;
-      const trimmedHeight = bottom - top + 1;
-      const trimmedCanvas = document.createElement('canvas');
-      trimmedCanvas.width = trimmedWidth;
-      trimmedCanvas.height = trimmedHeight;
-      trimmedCanvas.getContext('2d').drawImage(canvas, left, top, trimmedWidth, trimmedHeight, 0, 0, trimmedWidth, trimmedHeight);
-      canvas.width = trimmedWidth;
-      canvas.height = trimmedHeight;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(trimmedCanvas, 0, 0);
-    }
-  }
-
-  const quality = parseInt(qualityInput.value) / 100;
-  const format = formatSelect.value;
   const baseFilename = filenameInput.value.trim() || 'optimised-image';
   const extension = format === 'image/jpeg' ? '.jpg' : format === 'image/png' ? '.png' : '.webp';
   const filename = baseFilename + extension;
 
-  canvas.toBlob((blob) => {
+  canvas.toBlob(blob => {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 100);
   }, format, quality);
-}
-document.getElementById('auto-trim').addEventListener('change', function () {
-  const labelText = document.getElementById('auto-trim-text');
-  if (this.checked) {
-    labelText.textContent = '✅ Remove white space (PNG transparency)';
-    labelText.style.color = '#22c55e';
-  } else {
-    labelText.textContent = '🚫 Remove white space (PNG transparency)';
-    labelText.style.color = '#ccc';
-  }
-});
-qualityInput.addEventListener('input', () => {
-  document.getElementById('quality-value').textContent = qualityInput.value + '%';
-});
-
-customWidth.addEventListener('input', () => {
-  if (document.getElementById('lock-ratio').checked && img.width && img.height) {
-    customHeight.value = Math.round((parseInt(customWidth.value) / img.width) * img.height);
-  }
-  updateAspectRatio();
-});
-
-customHeight.addEventListener('input', () => {
-  if (document.getElementById('lock-ratio').checked && img.width && img.height) {
-    customWidth.value = Math.round((parseInt(customHeight.value) / img.height) * img.width);
-  }
-  updateAspectRatio();
-});
-
-function updateAspectRatio() {
-  const w = parseInt(customWidth.value);
-  const h = parseInt(customHeight.value);
-  const ratioSpan = document.getElementById('aspect-ratio');
-  if (w && h) {
-    const gcd = (a, b) => b == 0 ? a : gcd(b, a % b);
-    const divisor = gcd(w, h);
-    ratioSpan.textContent = `Aspect Ratio: ${Math.round(w/divisor)}:${Math.round(h/divisor)}`;
-  } else {
-    ratioSpan.textContent = 'Aspect Ratio: N/A';
-  }
 }
 </script>
 </body>
