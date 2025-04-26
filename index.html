@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Landing Page Image Optimiser</title>
 <meta name="description" content="Optimise, resize, compress, and rename landing page images for SEO and PPC. Fast, free, and online.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
   body {
     margin: 0;
@@ -148,6 +148,23 @@
   @media (max-width: 480px) {
     .controls { padding: 16px; }
   }
+select {
+  -webkit-appearance: none; /* remove Safari native style */
+  -moz-appearance: none;    /* remove Firefox native style */
+  appearance: none;
+  background: #1f1f30;
+  color: #f8f8f8;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23f8f8f8" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+  padding-right: 40px; /* space for the dropdown arrow */
+}
+    
 </style>
 </head>
 <body>
