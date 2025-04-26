@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <title>Crop Image</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #f7f8fa;
+  color: #333;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  flex-shrink: 0;
+  background: #6366f1;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+nav a {
+  color: #fff;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+}
+
+#drop-zone {
+  border: 2px dashed #bbb;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+  padding: 20px;
+  cursor: pointer;
+}
+
+#drop-zone.hover {
+  background-color: #e0e7ff;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+canvas {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+  max-width: 100%;
+  touch-action: none;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+select, button, label {
+  background-color: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+label input {
+  margin-left: 8px;
+  transform: scale(1.3);
+}
+
+button:hover, select:hover {
+  background-color: #4f46e5;
+}
+
+#canvas.hidden {
+  display: none;
+}
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>Image Tools</h1>
+    <nav>
+      <a href="index.html">WebP Converter</a>
+      <a href="remove-white-space.html">Remove White Space</a>
+      <a href="crop-image.html">Crop Image</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Crop Image</h2>
+    <div id="drop-zone">Drop image here or click to upload</div>
+    <input type="file" id="file-input" accept="image/*">
+    <canvas id="canvas"></canvas>
+    <div class="controls">
+      <select id="aspect-ratio">
+        <option value="free">Free</option>
+        <option value="1:1">1:1</option>
+        <option value="4:3">4:3</option>
+        <option value="16:9">16:9</option>
+        <option value="original">Keep Original</option>
+      </select>
+      <label><input type="checkbox" id="lock-aspect" checked /> Lock Aspect Ratio</label>
+      <button id="crop-btn">Crop</button>
+      <button id="reset-btn">Reset</button>
+      <button id="download-btn">Download</button>
+    </div>
+  </main>
+ <script>
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const cropBtn = document.getElementById('crop-btn');
+const resetBtn = document.getElementById('reset-btn');
+const downloadBtn = document.getElementById('download-btn');
+const aspectRatioSelect = document.getElementById('aspect-ratio');
+const lockAspectCheckbox = document.getElementById('lock-aspect');
+
+let image = new Image();
+let cropX = 50, cropY = 50, cropW = 200, cropH = 200;
+let isDragging = false, isResizing = false;
+let dragOffsetX = 0, dragOffsetY = 0;
+let activeHandle = null;
+let imageLoaded = false;
+let aspectRatio = null;
+
+canvas.classList.add('hidden');
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(image, 0, 0);
+  if (!imageLoaded) return;
+
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 2]);
+  for (let i = 1; i < 3; i++) {
+    ctx.beginPath();
+    ctx.moveTo(cropX + (cropW / 3) * i, cropY);
+    ctx.lineTo(cropX + (cropW / 3) * i, cropY + cropH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cropX, cropY + (cropH / 3) * i);
+    ctx.lineTo(cropX + cropW, cropY + (cropH / 3) * i);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#00f0ff';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([3, 3]);
+  ctx.strokeRect(cropX, cropY, cropW, cropH);
+  ctx.setLineDash([]);
+
+  const handleSize = 6;
+  const handles = [
+    [cropX, cropY], [cropX + cropW/2, cropY], [cropX + cropW, cropY],
+    [cropX, cropY + cropH/2], [cropX + cropW, cropY + cropH/2],
+    [cropX, cropY + cropH], [cropX + cropW/2, cropY + cropH], [cropX + cropW, cropY + cropH]
+  ];
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#00f0ff';
+  handles.forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, handleSize, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+  });
+}
+
+function getHandle(x, y) {
+  const size = 10;
+  const handles = [
+    [cropX, cropY], [cropX + cropW/2, cropY], [cropX + cropW, cropY],
+    [cropX, cropY + cropH/2], [cropX + cropW, cropY + cropH/2],
+    [cropX, cropY + cropH], [cropX + cropW/2, cropY + cropH], [cropX + cropW, cropY + cropH]
+  ];
+  return handles.findIndex(([hx, hy]) => Math.abs(hx - x) < size && Math.abs(hy - y) < size);
+}
+
+canvas.addEventListener('mousedown', e => {
+  if (!imageLoaded) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const handle = getHandle(x, y);
+
+  if (handle !== -1) {
+    isResizing = true;
+    activeHandle = handle;
+  } else if (x > cropX && x < cropX + cropW && y > cropY && y < cropY + cropH) {
+    isDragging = true;
+    dragOffsetX = x - cropX;
+    dragOffsetY = y - cropY;
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!imageLoaded) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+
+  if (isDragging) {
+    cropX = x - dragOffsetX;
+    cropY = y - dragOffsetY;
+  } else if (isResizing) {
+    const min = 20;
+    switch (activeHandle) {
+      case 0: cropW += cropX - x; cropH += cropY - y; cropX = x; cropY = y; break;
+      case 1: cropH += cropY - y; cropY = y; break;
+      case 2: cropW = x - cropX; cropH += cropY - y; cropY = y; break;
+      case 3: cropW += cropX - x; cropX = x; break;
+      case 4: cropW = x - cropX; break;
+      case 5: cropW += cropX - x; cropX = x; cropH = y - cropY; break;
+      case 6: cropH = y - cropY; break;
+      case 7: cropW = x - cropX; cropH = y - cropY; break;
+    }
+    if (lockAspectCheckbox.checked && aspectRatio) {
+      cropH = cropW / aspectRatio;
+    }
+    cropW = Math.max(min, cropW);
+    cropH = Math.max(min, cropH);
+  }
+  draw();
+});
+
+canvas.addEventListener('mouseup', () => {
+  isDragging = false;
+  isResizing = false;
+});
+
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    image.onload = () => {
+      canvas.classList.remove('hidden');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      cropW = image.width / 2;
+      cropH = image.height / 2;
+      cropX = (image.width - cropW) / 2;
+      cropY = (image.height - cropH) / 2;
+      imageLoaded = true;
+      draw();
+    };
+    image.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+dropZone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('hover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('hover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('hover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+cropBtn.addEventListener('click', () => {
+  if (!imageLoaded) return;
+  const temp = document.createElement('canvas');
+  temp.width = cropW;
+  temp.height = cropH;
+  temp.getContext('2d').drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+  canvas.width = cropW;
+  canvas.height = cropH;
+  ctx.drawImage(temp, 0, 0);
+  imageLoaded = false;
+});
+
+resetBtn.addEventListener('click', () => {
+  if (!image.src) return;
+  image.onload();
+});
+
+downloadBtn.addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.download = 'cropped-image.png';
+  link.href = canvas.toDataURL();
+  link.click();
+});
+
+aspectRatioSelect.addEventListener('change', () => {
+  const val = aspectRatioSelect.value;
+  if (val === 'free') aspectRatio = null;
+  else if (val === 'original') aspectRatio = image.width / image.height;
+  else {
+    const [w, h] = val.split(':').map(Number);
+    aspectRatio = w / h;
+  }
+});
+</script>
+</body>
+</html>
