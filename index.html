@@ -175,6 +175,7 @@ select {
   <label>Resize:</label>
   <select id="resize-option">
     <option value="custom" selected>Custom Size</option>
+    <option value="percentage">Percentage</option>
     <option value="original">Original Size</option>
     <option value="1920x1080">Full Banner (1920x1080)</option>
     <option value="1600x900">Hero Section (1600x900)</option>
@@ -188,6 +189,12 @@ select {
       <input type="checkbox" id="lock-ratio" checked>
     </div>
     <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
+  </div>
+  <div id="percentage-field" style="display: none; flex-direction: column; gap: 12px;">
+    <label for="percentage-value">Scale: <span id="percentage-display">100%</span></label>
+    <input type="range" id="percentage-value" min="1" max="200" value="100">
+    <p style="font-size: 0.85rem; color: #999;">Original size: <span id="original-dimensions">N/A</span></p>
+    <p style="font-size: 0.85rem; color: #999;">New size: <span id="new-dimensions">N/A</span></p>
   </div>
   <label for="quality">Quality: <span id="quality-value">90%</span></label>
   <input type="range" id="quality" min="10" max="100" value="90">
@@ -216,14 +223,19 @@ const canvas = document.getElementById('preview-canvas');
 const ctx = canvas.getContext('2d');
 const lockRatio = document.getElementById('lock-ratio');
 const aspectRatioDisplay = document.getElementById('aspect-ratio');
+const percentageField = document.getElementById('percentage-field');
+const percentageValue = document.getElementById('percentage-value');
+const percentageDisplay = document.getElementById('percentage-display');
+const originalDimensions = document.getElementById('original-dimensions');
+const newDimensions = document.getElementById('new-dimensions');
 let img = new Image();
 
 uploadArea.addEventListener('click', () => fileInput.click());
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#333'; });
-uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#2e2e2e');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#404065'; });
+uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#31314a');
 uploadArea.addEventListener('drop', e => {
   e.preventDefault();
-  uploadArea.style.background = '#2e2e2e';
+  uploadArea.style.background = '#31314a';
   handleFile(e.dataTransfer.files[0]);
 });
 fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
@@ -247,12 +259,21 @@ function previewImage() {
     customWidth.value = img.width;
     customHeight.value = img.height;
     updateAspectRatio();
+  } else if (resizeSelect.value === 'percentage') {
+    originalDimensions.textContent = `${img.width}px × ${img.height}px`;
+    updatePercentagePreview();
   }
 }
 
 resizeSelect.addEventListener('change', () => {
   const customFields = document.getElementById('custom-size-fields');
   customFields.style.display = resizeSelect.value === 'custom' ? 'flex' : 'none';
+  percentageField.style.display = resizeSelect.value === 'percentage' ? 'flex' : 'none';
+  
+  if (resizeSelect.value === 'percentage' && img.src) {
+    originalDimensions.textContent = `${img.width}px × ${img.height}px`;
+    updatePercentagePreview();
+  }
 });
 
 customWidth.addEventListener('input', () => {
@@ -268,6 +289,21 @@ customHeight.addEventListener('input', () => {
   }
   updateAspectRatio();
 });
+
+percentageValue.addEventListener('input', () => {
+  percentageDisplay.textContent = percentageValue.value + '%';
+  updatePercentagePreview();
+});
+
+function updatePercentagePreview() {
+  if (!img.src) return;
+  
+  const percentage = parseInt(percentageValue.value) / 100;
+  const newWidth = Math.round(img.width * percentage);
+  const newHeight = Math.round(img.height * percentage);
+  
+  newDimensions.textContent = `${newWidth}px × ${newHeight}px`;
+}
 
 qualityInput.addEventListener('input', () => {
   qualityValue.textContent = qualityInput.value + '%';
@@ -293,7 +329,11 @@ function processImage() {
   const format = formatSelect.value;
   const quality = parseInt(qualityInput.value) / 100;
 
-  if (option !== 'original') {
+  if (option === 'percentage') {
+    const percentage = parseInt(percentageValue.value) / 100;
+    width = Math.round(img.width * percentage);
+    height = Math.round(img.height * percentage);
+  } else if (option !== 'original') {
     if (option === 'custom') {
       width = parseInt(customWidth.value) || width;
       height = parseInt(customHeight.value) || height;
