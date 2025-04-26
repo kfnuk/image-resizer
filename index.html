@@ -1,323 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <title>Simple WebP Converter</title>
-  <style>
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f7f8fa;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background: #6366f1;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      color: #fff;
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    nav a {
-      color: #fff;
-      margin-left: 15px;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      min-height: 100vh;
-    }
-    h2 {
-      margin-bottom: 20px;
-      font-size: 2.5rem;
-      color: #111;
-    }
-    #drop-zone {
-      border: 2px dashed #bbb;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 500px;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background-color: #fff;
-      transition: background-color 0.3s;
-      margin-bottom: 20px;
-      padding: 20px;
-      cursor: pointer;
-    }
-    #drop-zone.hover {
-      background-color: #e0e7ff;
-    }
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    label {
-      margin: 5px 0;
-    }
-    input[type='file'] {
-      display: none;
-    }
-    button {
-      background-color: #6366f1;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin: 10px 0;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #4f46e5;
-    }
-    #file-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin: 10px 0;
-    }
-    .preview-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      padding: 10px;
-      width: 140px;
-      text-align: center;
-      position: relative;
-    }
-    .preview-card img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 5px;
-    }
-    .preview-card p {
-      font-size: 0.85rem;
-      word-break: break-word;
-      margin: 5px 0;
-    }
-    .remove-btn {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    #download-links {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .download-btn {
-      background-color: #22c55e;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 16px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .download-btn:hover {
-      background-color: #16a34a;
-    }
-    #loading {
-      display: none;
-      margin-top: 20px;
-    }
-    .spinner {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #6366f1;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Page Image Optimiser</title>
+<meta name="description" content="Optimise, resize, compress, and rename landing page images for SEO and PPC. Fast, free, and online.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #1e1e2f, #282841);
+    color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    min-height: 100vh;
+  }
+  h1 {
+    margin: 20px 0;
+    font-size: 2.5rem;
+    color: #ffffff;
+  }
+  #upload-area {
+    background: #31314a;
+    border: 2px dashed #555;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 620px;
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    color: #bbb;
+    font-size: 1.2rem;
+  }
+  #upload-area:hover {
+    background: #404065;
+    border-color: #777;
+  }
+  input[type="file"] {
+    display: none;
+  }
+  .controls {
+    background: #26263c;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    max-width: 620px;
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  label {
+    font-size: 1rem;
+    color: #d1d5db;
+  }
+  input, select, button, input[type=range] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  input, select {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    background: #1f1f30;
+    color: #f8f8f8;
+  }
+  input::placeholder {
+    color: #888;
+    font-size: 0.95rem;
+  }
+  button {
+    background: #6366f1;
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.2s;
+  }
+  button:hover {
+    background: #4f46e5;
+    transform: scale(1.03);
+  }
+  #preview-canvas {
+    margin-bottom: 40px;
+    margin-top: 30px;
+    max-width: 100%;
+    max-height: 520px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: block;
+  }
+  input[type=range] {
+    appearance: none;
+    height: 6px;
+    background: #3c3c5a;
+    border-radius: 10px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    background: #6366f1;
+    border: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  #lock-ratio {
+    appearance: none;
+    width: 50px;
+    height: 26px;
+    background: #555;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #lock-ratio::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    left: 3px;
+    transition: 0.3s;
+  }
+  #lock-ratio:checked {
+    background: #6366f1;
+  }
+  #lock-ratio:checked::before {
+    transform: translateX(24px);
+  }
+  @media (max-width: 480px) {
+    .controls { padding: 16px; }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Image Tools</h1>
-  <nav>
-    <a href="index.html">WebP Converter</a>
-    <a href="remove-white-space.html">Remove White Space</a>
-    <a href="crop-image.html">Crop Image</a>
-  </nav>
-  </header>
-  <main>
-    <h2>Image to WebP Converter</h2>
-    <div id="drop-zone">Drop images here or click to upload</div>
-    <input type="file" id="file-input" multiple accept="image/*" />
-    <div class="controls">
-      <label>Quality: <span id="quality-value">80%</span></label>
-      <input type="range" id="quality" min="10" max="100" step="5" value="80" />
-      <label><input type="checkbox" id="lossless" /> Lossless Compression (forces 100%)</label>
-      <label><input type="checkbox" id="strip-meta" /> Strip Metadata (EXIF, etc.)</label>
-      <button onclick="convertImages()">Convert to WebP</button>
+<h1>Landing Page Image Optimiser</h1>
+<div id="upload-area">Click or Drop Images Here</div>
+<input type="file" id="file-input" accept="image/*">
+<div class="controls">
+  <label>Resize:</label>
+  <select id="resize-option">
+    <option value="custom" selected>Custom Size</option>
+    <option value="original">Original Size</option>
+    <option value="1920x1080">Full Banner (1920x1080)</option>
+    <option value="1600x900">Hero Section (1600x900)</option>
+    <option value="750x1334">Mobile (750x1334)</option>
+  </select>
+  <div id="custom-size-fields" style="display: flex; flex-direction: column; gap: 12px;">
+    <input type="number" id="custom-width" placeholder="Width (px)">
+    <input type="number" id="custom-height" placeholder="Height (px)">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <label for="lock-ratio" style="font-size: 0.9rem;">Lock Aspect Ratio</label>
+      <input type="checkbox" id="lock-ratio" checked>
     </div>
-    <div id="file-list"></div>
-    <div id="loading"><div class="spinner"></div></div>
-    <div id="download-links"></div>
-  </main>
-  <script>
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const fileList = document.getElementById('file-list');
-    const qualityInput = document.getElementById('quality');
-    const qualityValue = document.getElementById('quality-value');
-    const losslessCheckbox = document.getElementById('lossless');
-    const stripMetaCheckbox = document.getElementById('strip-meta');
-    const loading = document.getElementById('loading');
-    const filesArray = [];
+    <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
+  </div>
+  <label for="quality">Quality: <span id="quality-value">90%</span></label>
+  <input type="range" id="quality" min="10" max="100" value="90">
+  <label>Rename File (for SEO):</label>
+  <input type="text" id="new-filename" placeholder="e.g., best-product-image">
+  <label>Output Format:</label>
+  <select id="format">
+    <option value="image/webp">WebP</option>
+    <option value="image/jpeg">JPEG</option>
+    <option value="image/png">PNG</option>
+  </select>
+  <button onclick="processImage()">Optimise & Download</button>
+</div>
+<canvas id="preview-canvas"></canvas>
+<script>
+const uploadArea = document.getElementById('upload-area');
+const fileInput = document.getElementById('file-input');
+const resizeSelect = document.getElementById('resize-option');
+const customWidth = document.getElementById('custom-width');
+const customHeight = document.getElementById('custom-height');
+const qualityInput = document.getElementById('quality');
+const qualityValue = document.getElementById('quality-value');
+const filenameInput = document.getElementById('new-filename');
+const formatSelect = document.getElementById('format');
+const canvas = document.getElementById('preview-canvas');
+const ctx = canvas.getContext('2d');
+const lockRatio = document.getElementById('lock-ratio');
+const aspectRatioDisplay = document.getElementById('aspect-ratio');
+let img = new Image();
 
-    qualityInput.addEventListener('input', () => {
-      qualityValue.textContent = qualityInput.value + '%';
-    });
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#333'; });
+uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#2e2e2e');
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.style.background = '#2e2e2e';
+  handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
 
-    losslessCheckbox.addEventListener('change', () => {
-      qualityInput.disabled = losslessCheckbox.checked;
-      qualityValue.textContent = losslessCheckbox.checked
-        ? '100% (Lossless)'
-        : qualityInput.value + '%';
-    });
+function handleFile(file) {
+  if (!file || !file.type.startsWith('image/')) return alert('Please upload a valid image file.');
+  const reader = new FileReader();
+  reader.onload = e => {
+    img = new Image();
+    img.onload = previewImage;
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
-    dropZone.addEventListener('click', () => fileInput.click());
-    dropZone.addEventListener('dragover', e => {
-      e.preventDefault();
-      dropZone.classList.add('hover');
-    });
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('hover');
-    });
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropZone.classList.remove('hover');
-      addFiles(e.dataTransfer.files);
-    });
-    fileInput.addEventListener('change', () => addFiles(fileInput.files));
+function previewImage() {
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0);
+  if (resizeSelect.value === 'custom') {
+    customWidth.value = img.width;
+    customHeight.value = img.height;
+    updateAspectRatio();
+  }
+}
 
-    function addFiles(fileListInput) {
-      for (const file of fileListInput) {
-        if (!filesArray.some(f => f.name === file.name)) {
-          filesArray.push(file);
-        }
-      }
-      updateFileList();
+resizeSelect.addEventListener('change', () => {
+  const customFields = document.getElementById('custom-size-fields');
+  customFields.style.display = resizeSelect.value === 'custom' ? 'flex' : 'none';
+});
+
+customWidth.addEventListener('input', () => {
+  if (lockRatio.checked && img.width && img.height) {
+    customHeight.value = Math.round((parseInt(customWidth.value) / img.width) * img.height);
+  }
+  updateAspectRatio();
+});
+
+customHeight.addEventListener('input', () => {
+  if (lockRatio.checked && img.width && img.height) {
+    customWidth.value = Math.round((parseInt(customHeight.value) / img.height) * img.width);
+  }
+  updateAspectRatio();
+});
+
+qualityInput.addEventListener('input', () => {
+  qualityValue.textContent = qualityInput.value + '%';
+});
+
+function updateAspectRatio() {
+  const w = parseInt(customWidth.value);
+  const h = parseInt(customHeight.value);
+  if (w && h) {
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+    const ratio = gcd(w, h);
+    aspectRatioDisplay.textContent = `Aspect Ratio: ${w/ratio}:${h/ratio}`;
+  } else {
+    aspectRatioDisplay.textContent = 'Aspect Ratio: N/A';
+  }
+}
+
+function processImage() {
+  if (!img.src) return alert('Please upload an image first.');
+  let width = img.width;
+  let height = img.height;
+  const option = resizeSelect.value;
+  const format = formatSelect.value;
+  const quality = parseInt(qualityInput.value) / 100;
+
+  if (option !== 'original') {
+    if (option === 'custom') {
+      width = parseInt(customWidth.value) || width;
+      height = parseInt(customHeight.value) || height;
+    } else {
+      const [w, h] = option.split('x');
+      width = parseInt(w);
+      height = parseInt(h);
     }
+  }
 
-    function removeFile(index) {
-      filesArray.splice(index, 1);
-      updateFileList();
-    }
+  canvas.width = width;
+  canvas.height = height;
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(img, 0, 0, width, height);
 
-    function updateFileList() {
-      fileList.innerHTML = '';
-      filesArray.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const card = document.createElement('div');
-          card.className = 'preview-card';
-          card.innerHTML = `
-            <button class="remove-btn" onclick="removeFile(${index})">&times;</button>
-            <img src="${e.target.result}" alt="${file.name}">
-            <p>${file.name}</p>
-          `;
-          fileList.appendChild(card);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+  const baseFilename = filenameInput.value.trim() || 'optimised-image';
+  const extension = format === 'image/jpeg' ? '.jpg' : format === 'image/png' ? '.png' : '.webp';
+  const filename = baseFilename + extension;
 
-    async function convertImages() {
-      const downloadLinks = document.getElementById('download-links');
-      downloadLinks.innerHTML = '';
-      if (!filesArray.length) {
-        alert('Please select or drop one or more image files.');
-        return;
-      }
-      loading.style.display = 'block';
-      const quality = losslessCheckbox.checked ? 1 : parseFloat(qualityInput.value) / 100;
-      for (const file of filesArray) {
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        await new Promise(resolve => {
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            canvas.toBlob(blob => {
-              if (stripMetaCheckbox.checked && blob) {
-                const tempImg = new Image();
-                tempImg.src = URL.createObjectURL(blob);
-                tempImg.onload = () => {
-                  const tempCanvas = document.createElement('canvas');
-                  tempCanvas.width = tempImg.width;
-                  tempCanvas.height = tempImg.height;
-                  const tempCtx = tempCanvas.getContext('2d');
-                  tempCtx.drawImage(tempImg, 0, 0);
-                  tempCanvas.toBlob(cleanBlob => {
-                    createDownloadLink(cleanBlob, file.name);
-                  }, 'image/webp', quality);
-                };
-              } else {
-                createDownloadLink(blob, file.name);
-              }
-            }, 'image/webp', quality);
-            resolve();
-          };
-        });
-      }
-      loading.style.display = 'none';
-    }
-
-    function createDownloadLink(blob, originalName) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = originalName.split('.')[0] + '.webp';
-      a.className = 'download-btn';
-      a.textContent = 'Download ' + a.download;
-      document.getElementById('download-links').appendChild(a);
-    }
-  </script>
+  canvas.toBlob(blob => {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 100);
+  }, format, quality);
+}
+</script>
 </body>
 </html>
