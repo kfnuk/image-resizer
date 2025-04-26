@@ -303,31 +303,44 @@ dropZone.addEventListener('drop', e => {
 
 cropBtn.addEventListener('click', () => {
   if (!imageLoaded) return;
-  const temp = document.createElement('canvas');
-  temp.width = cropW;
-  temp.height = cropH;
-  const tempCtx = temp.getContext('2d');
+
+  // Create a temporary canvas
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = cropW;
+  tempCanvas.height = cropH;
+  const tempCtx = tempCanvas.getContext('2d');
+
+  // Draw from the original image into temp canvas
   tempCtx.drawImage(
     image,
-    cropX, cropY, cropW, cropH, // source rectangle (from original image)
-    0, 0, cropW, cropH           // destination rectangle (onto temp canvas)
+    cropX, cropY, cropW, cropH,   // source rectangle
+    0, 0, cropW, cropH            // destination rectangle
   );
 
-  // Now replace the canvas with the cropped version
+  // Now replace the main canvas with the cropped result
   canvas.width = cropW;
   canvas.height = cropH;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(temp, 0, 0);
-  
-  // Important: Keep imageLoaded = true so you can still download after cropping
+  ctx.drawImage(tempCanvas, 0, 0);
+
+  // Important: Reset state
+  image.src = tempCanvas.toDataURL();  // Update the image to the cropped version
   imageLoaded = true;
 
-  // Also reset crop box to full canvas after crop
+  // Clear the crop box
   cropX = 0;
   cropY = 0;
   cropW = canvas.width;
   cropH = canvas.height;
+
+  // Modify draw() so it only draws the image if cropX == 0
+  draw = function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    // No crop box anymore after crop
+  };
 });
+
 
 
 resetBtn.addEventListener('click', () => {
