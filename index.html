@@ -3,364 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Landing Page Image Optimiser</title>
+<title>Image Resizer and Converter</title>
 <meta name="description" content="Optimise, resize, compress, and rename landing page images for SEO and PPC. Fast, free, and online.">
 <link rel="icon" type="image/png" href="favicon.png">
-<style>
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom right, #1e1e2f, #282841);
-    color: #f8f8f8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    min-height: 100vh;
-  }
-  h1 {
-    margin: 20px 0;
-    font-size: 2.5rem;
-    color: #ffffff;
-  }
-  #upload-area {
-    background: #31314a;
-    border: 2px dashed #555;
-    border-radius: 14px;
-    width: 100%;
-    max-width: 620px;
-    height: 190px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 25px;
-    cursor: pointer;
-    transition: background 0.3s, border-color 0.3s;
-    color: #bbb;
-    font-size: 1.2rem;
-  }
-  #upload-area:hover {
-    background: #404065;
-    border-color: #777;
-  }
-  input[type="file"] {
-    display: none;
-  }
-  .controls {
-    background: #26263c;
-    padding: 28px;
-    border-radius: 18px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    max-width: 620px;
-    width: 100%;
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  label {
-    font-size: 1rem;
-    color: #d1d5db;
-  }
-  input, select, button, input[type=range] {
-    width: 100%;
-    box-sizing: border-box;
-  }
-  input, select {
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    font-size: 1rem;
-    background: #1f1f30;
-    color: #f8f8f8;
-  }
-  input::placeholder {
-    color: #888;
-    font-size: 0.95rem;
-  }
-  button {
-    background: #6366f1;
-    color: white;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: background 0.3s, transform 0.2s;
-  }
-  button:hover {
-    background: #4f46e5;
-    transform: scale(1.03);
-  }
-  #preview-canvas {
-    margin-bottom: 40px;
-    margin-top: 30px;
-    max-width: 100%;
-    max-height: 520px;
-    border-radius: 16px;
-    background: #ffffff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    display: block;
-  }
-  input[type=range] {
-    appearance: none;
-    height: 6px;
-    background: #3c3c5a;
-    border-radius: 10px;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    background: #6366f1;
-    border: none;
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    cursor: pointer;
-    -webkit-appearance: none;
-  }
-  #lock-ratio {
-    appearance: none;
-    width: 50px;
-    height: 26px;
-    background: #555;
-    border-radius: 20px;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  #lock-ratio::before {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: white;
-    top: 3px;
-    left: 3px;
-    transition: 0.3s;
-  }
-  #lock-ratio:checked {
-    background: #6366f1;
-  }
-  #lock-ratio:checked::before {
-    transform: translateX(24px);
-  }
-  @media (max-width: 480px) {
-    .controls { padding: 16px; }
-  }
-select {
-  -webkit-appearance: none; /* remove Safari native style */
-  -moz-appearance: none;    /* remove Firefox native style */
-  appearance: none;
-  background: #1f1f30;
-  color: #f8f8f8;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23f8f8f8" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px 16px;
-  padding-right: 40px; /* space for the dropdown arrow */
-}
-    
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Landing Page Image Optimiser</h1>
-<div id="upload-area">Click or Drop Images Here</div>
-<input type="file" id="file-input" accept="image/*">
-<div class="controls">
-  <label>Resize:</label>
-  <select id="resize-option">
-    <option value="custom" selected>Custom Size</option>
-    <option value="percentage">Percentage</option>
-    <option value="original">Original Size</option>
-    <option value="1920x1080">Full Banner (1920x1080)</option>
-    <option value="1600x900">Hero Section (1600x900)</option>
-    <option value="750x1334">Mobile (750x1334)</option>
-  </select>
-  <div id="custom-size-fields" style="display: flex; flex-direction: column; gap: 12px;">
-    <input type="number" id="custom-width" placeholder="Width (px)">
-    <input type="number" id="custom-height" placeholder="Height (px)">
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-      <label for="lock-ratio" style="font-size: 0.9rem;">Lock Aspect Ratio</label>
-      <input type="checkbox" id="lock-ratio" checked>
-    </div>
-    <span id="aspect-ratio" style="font-size: 0.85rem; color: #999;">Aspect Ratio: N/A</span>
-  </div>
-  <div id="percentage-field" style="display: none; flex-direction: column; gap: 12px;">
-    <label for="percentage-value">Scale: <span id="percentage-display">100%</span></label>
-    <input type="range" id="percentage-value" min="1" max="200" value="100">
-    <p style="font-size: 0.85rem; color: #999;">Original size: <span id="original-dimensions">N/A</span></p>
-    <p style="font-size: 0.85rem; color: #999;">New size: <span id="new-dimensions">N/A</span></p>
-  </div>
-  <label for="quality">Quality: <span id="quality-value">90%</span></label>
-  <input type="range" id="quality" min="10" max="100" value="90">
-  <label>Rename File (for SEO):</label>
-  <input type="text" id="new-filename" placeholder="e.g., best-product-image">
-  <label>Output Format:</label>
-  <select id="format">
-    <option value="image/webp">WebP</option>
-    <option value="image/jpeg">JPEG</option>
-    <option value="image/png">PNG</option>
-  </select>
-  <button onclick="processImage()">Optimise & Download</button>
+
+<div id="notification-area"></div>
+
+<h1>Image Resizer and Converter</h1>
+
+<div id="upload-area">
+  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="upload-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+  Click or Drop Images Here
 </div>
-<canvas id="preview-canvas"></canvas>
-<script>
-const uploadArea = document.getElementById('upload-area');
-const fileInput = document.getElementById('file-input');
-const resizeSelect = document.getElementById('resize-option');
-const customWidth = document.getElementById('custom-width');
-const customHeight = document.getElementById('custom-height');
-const qualityInput = document.getElementById('quality');
-const qualityValue = document.getElementById('quality-value');
-const filenameInput = document.getElementById('new-filename');
-const formatSelect = document.getElementById('format');
-const canvas = document.getElementById('preview-canvas');
-const ctx = canvas.getContext('2d');
-const lockRatio = document.getElementById('lock-ratio');
-const aspectRatioDisplay = document.getElementById('aspect-ratio');
-const percentageField = document.getElementById('percentage-field');
-const percentageValue = document.getElementById('percentage-value');
-const percentageDisplay = document.getElementById('percentage-display');
-const originalDimensions = document.getElementById('original-dimensions');
-const newDimensions = document.getElementById('new-dimensions');
-let img = new Image();
+<input type="file" id="file-input" accept="image/*" style="display: none;">
 
-uploadArea.addEventListener('click', () => fileInput.click());
-uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#404065'; });
-uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#31314a');
-uploadArea.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadArea.style.background = '#31314a';
-  handleFile(e.dataTransfer.files[0]);
-});
-fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+<div id="spinner" style="display: none;"></div>
 
-function handleFile(file) {
-  if (!file || !file.type.startsWith('image/')) return alert('Please upload a valid image file.');
-  const reader = new FileReader();
-  reader.onload = e => {
-    img = new Image();
-    img.onload = previewImage;
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+<div id="editor-interface" style="display: none;">
+  <div class="controls">
+    <fieldset>
+      <legend>Resize Settings</legend>
+      <label for="resize-option">Resize:</label>
+      <select id="resize-option">
+        <option value="custom" selected>Custom Size</option>
+        <option value="percentage">Percentage</option>
+        <option value="original">Original Size</option>
+        <option value="1920x1080">Full Banner (1920x1080)</option>
+        <option value="1600x900">Hero Section (1600x900)</option>
+        <option value="750x1334">Mobile (750x1334)</option>
+      </select>
 
-function previewImage() {
-  canvas.width = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
-  if (resizeSelect.value === 'custom') {
-    customWidth.value = img.width;
-    customHeight.value = img.height;
-    updateAspectRatio();
-  } else if (resizeSelect.value === 'percentage') {
-    originalDimensions.textContent = `${img.width}px × ${img.height}px`;
-    updatePercentagePreview();
-  }
-}
+      <div id="custom-size-fields" style="display: flex; flex-direction: column; gap: 12px;">
+        <label for="custom-width">Width (px):</label>
+        <input type="number" id="custom-width" placeholder="e.g., 800">
+        <label for="custom-height">Height (px):</label>
+        <input type="number" id="custom-height" placeholder="e.g., 600">
+        <div class="toggle-container">
+          <span class="toggle-switch-label">Lock Aspect Ratio</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="lock-ratio" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <span id="aspect-ratio" class="hidden">Aspect Ratio: N/A</span>
+      </div>
 
-resizeSelect.addEventListener('change', () => {
-  const customFields = document.getElementById('custom-size-fields');
-  customFields.style.display = resizeSelect.value === 'custom' ? 'flex' : 'none';
-  percentageField.style.display = resizeSelect.value === 'percentage' ? 'flex' : 'none';
-  
-  if (resizeSelect.value === 'percentage' && img.src) {
-    originalDimensions.textContent = `${img.width}px × ${img.height}px`;
-    updatePercentagePreview();
-  }
-});
+      <div id="percentage-field" style="display: none; flex-direction: column; gap: 12px;">
+        <label for="percentage-value">Scale: <span id="percentage-display">100%</span></label>
+        <input type="range" id="percentage-value" min="1" max="200" value="100">
+        <p class="dimension-info">Original: <span id="original-dimensions">N/A</span></p>
+        <p class="dimension-info">New: <span id="new-dimensions">N/A</span></p>
+      </div>
+    </fieldset>
 
-customWidth.addEventListener('input', () => {
-  if (lockRatio.checked && img.width && img.height) {
-    customHeight.value = Math.round((parseInt(customWidth.value) / img.width) * img.height);
-  }
-  updateAspectRatio();
-});
+    <fieldset>
+      <legend>Output Settings</legend>
+      <label for="quality">Quality: <span id="quality-value">90%</span></label>
+      <input type="range" id="quality" min="10" max="100" value="90">
 
-customHeight.addEventListener('input', () => {
-  if (lockRatio.checked && img.width && img.height) {
-    customWidth.value = Math.round((parseInt(customHeight.value) / img.height) * img.width);
-  }
-  updateAspectRatio();
-});
+      <label for="new-filename">Rename File (for SEO):</label>
+      <input type="text" id="new-filename" placeholder="e.g., best-product-image">
 
-percentageValue.addEventListener('input', () => {
-  percentageDisplay.textContent = percentageValue.value + '%';
-  updatePercentagePreview();
-});
+      <label for="format">Output Format:</label>
+      <select id="format">
+        <option value="image/webp">WebP</option>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/png">PNG</option>
+      </select>
+    </fieldset>
 
-function updatePercentagePreview() {
-  if (!img.src) return;
-  
-  const percentage = parseInt(percentageValue.value) / 100;
-  const newWidth = Math.round(img.width * percentage);
-  const newHeight = Math.round(img.height * percentage);
-  
-  newDimensions.textContent = `${newWidth}px × ${newHeight}px`;
-}
+    <button id="process-button">Optimise & Download</button>
+  </div>
 
-qualityInput.addEventListener('input', () => {
-  qualityValue.textContent = qualityInput.value + '%';
-});
+  <div id="preview-container" class="hidden">
+      <canvas id="preview-canvas"></canvas>
+  </div>
+</div>
 
-function updateAspectRatio() {
-  const w = parseInt(customWidth.value);
-  const h = parseInt(customHeight.value);
-  if (w && h) {
-    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-    const ratio = gcd(w, h);
-    aspectRatioDisplay.textContent = `Aspect Ratio: ${w/ratio}:${h/ratio}`;
-  } else {
-    aspectRatioDisplay.textContent = 'Aspect Ratio: N/A';
-  }
-}
-
-function processImage() {
-  if (!img.src) return alert('Please upload an image first.');
-  let width = img.width;
-  let height = img.height;
-  const option = resizeSelect.value;
-  const format = formatSelect.value;
-  const quality = parseInt(qualityInput.value) / 100;
-
-  if (option === 'percentage') {
-    const percentage = parseInt(percentageValue.value) / 100;
-    width = Math.round(img.width * percentage);
-    height = Math.round(img.height * percentage);
-  } else if (option !== 'original') {
-    if (option === 'custom') {
-      width = parseInt(customWidth.value) || width;
-      height = parseInt(customHeight.value) || height;
-    } else {
-      const [w, h] = option.split('x');
-      width = parseInt(w);
-      height = parseInt(h);
-    }
-  }
-
-  canvas.width = width;
-  canvas.height = height;
-  ctx.clearRect(0, 0, width, height);
-  ctx.drawImage(img, 0, 0, width, height);
-
-  const baseFilename = filenameInput.value.trim() || 'optimised-image';
-  const extension = format === 'image/jpeg' ? '.jpg' : format === 'image/png' ? '.png' : '.webp';
-  const filename = baseFilename + extension;
-
-  canvas.toBlob(blob => {
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 100);
-  }, format, quality);
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
